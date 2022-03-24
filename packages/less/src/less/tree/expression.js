@@ -27,6 +27,7 @@ Expression.prototype = Object.assign(new Node(), {
         if (inParenthesis) {
             context.inParenthesis();
         }
+        context.inExpression();
         if (this.value.length > 1) {
             returnValue = new Expression(this.value.map(function (e) {
                 if (!e.eval) {
@@ -45,6 +46,7 @@ Expression.prototype = Object.assign(new Node(), {
         if (inParenthesis) {
             context.outOfParenthesis();
         }
+        context.outExpression();
         if (this.parens && this.parensInOp && !mathOn && !doubleParen 
             && (!(returnValue instanceof Dimension))) {
             returnValue = new Paren(returnValue);

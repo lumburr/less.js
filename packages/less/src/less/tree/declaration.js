@@ -64,6 +64,7 @@ Declaration.prototype = Object.assign(new Node(), {
         }
         try {
             context.importantScope.push({});
+            context.setName(this.name[0].value)
             evaldValue = this.value.eval(context);
 
             if (!this.variable && evaldValue.type === 'DetachedRuleset') {

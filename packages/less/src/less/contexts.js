@@ -89,13 +89,33 @@ contexts.Eval.prototype.outOfParenthesis = function () {
     this.parensStack.pop();
 };
 
+contexts.Eval.prototype.inExpression = function () {
+    if (!this.expressionStack) {
+        this.expressionStack = [];
+    }
+    this.expressionStack.push(true);
+};
+
+contexts.Eval.prototype.outExpression = function () {
+    this.expressionStack.pop();
+};
 contexts.Eval.prototype.inCalc = false;
 contexts.Eval.prototype.mathOn = true;
+
+contexts.Eval.prototype.setName = function(name) {
+    this.name = name
+};
+
 contexts.Eval.prototype.isMathOn = function (op) {
     if (!this.mathOn) {
         return false;
     }
-    if (op === '/' && this.math !== Constants.Math.ALWAYS && (!this.parensStack || !this.parensStack.length)) {
+    if (op === '/' 
+        && this.math !== Constants.Math.ALWAYS 
+        && (!this.parensStack || !this.parensStack.length)
+        && (!this.expressionStack || !this.expressionStack.length)
+        && !attributeIsOperation(this.name)
+    ) {
         return false;
     }
     if (this.math > Constants.Math.PARENS_DIVISION) {
@@ -161,4 +181,13 @@ function isPathLocalRelative(path) {
     return path.charAt(0) === '.';
 }
 
+function attributeIsOperation(name) {
+    const operation = ['@media', 'font', 'bar', 'border-radius', 'border-radius-keep', 'border-radius-parts', 'color']
+    operation.forEach((attribute)=>{
+        if (name === attribute) {
+            return false
+        }
+    })
+    return true
+}
 // todo - do the same for the toCSS ?
