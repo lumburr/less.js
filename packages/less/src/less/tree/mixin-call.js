@@ -82,7 +82,9 @@ MixinCall.prototype = Object.assign(new Node(), {
 
         for (i = 0; i < this.arguments.length; i++) {
             arg = this.arguments[i];
+            context.inMixinCall()
             argValue = arg.value.eval(context);
+            context.outMixinCall()
             if (arg.expand && Array.isArray(argValue.value)) {
                 argValue = argValue.value;
                 for (m = 0; m < argValue.length; m++) {
@@ -157,7 +159,9 @@ MixinCall.prototype = Object.assign(new Node(), {
                                 mixin = new MixinDefinition('', [], mixin.rules, null, false, null, originalRuleset.visibilityInfo());
                                 mixin.originalRuleset = originalRuleset;
                             }
+                            context.inMixinCall()
                             const newRules = mixin.evalCall(context, args, this.important).rules;
+                            context.outMixinCall()
                             this._setVisibilityToReplacement(newRules);
                             Array.prototype.push.apply(rules, newRules);
                         } catch (e) {

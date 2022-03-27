@@ -1,5 +1,6 @@
 import Node from './node';
 import Call from './call';
+import Declaration from './declaration'
 
 const Variable = function(name, index, currentFileInfo) {
     this.name = name;
@@ -38,7 +39,14 @@ Variable.prototype = Object.assign(new Node(), {
                     return (new Call('_SELF', [v.value])).eval(context);
                 }
                 else {
-                    return v.value.eval(context);
+                    if (v instanceof Declaration && v.variable) {
+                        context.inDeclaration()
+                    }
+                    let evalValue = v.value.eval(context)
+                    if (v instanceof Declaration && v.variable) {
+                        context.outDeclaration()
+                    }
+                    return evalValue;
                 }
             }
         });

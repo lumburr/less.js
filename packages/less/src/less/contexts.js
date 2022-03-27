@@ -51,7 +51,8 @@ const evalCopyProperties = [
     'javascriptEnabled', // option - whether Inline JavaScript is enabled. if undefined, defaults to false
     'pluginManager',     // Used as the plugin manager for the session
     'importantScope',    // used to bubble up !important statements
-    'rewriteUrls'        // option - whether to adjust URL's to be relative
+    'rewriteUrls',        // option - whether to adjust URL's to be relative
+    'mixinCallStack'
 ];
 
 contexts.Eval = function(options, frames) {
@@ -89,36 +90,42 @@ contexts.Eval.prototype.outOfParenthesis = function () {
     this.parensStack.pop();
 };
 
-contexts.Eval.prototype.inExpression = function () {
-    if (!this.expressionStack) {
-        this.expressionStack = [];
+contexts.Eval.prototype.inMixinCall = function () {
+    if (!this.mixinCallStack) {
+        this.mixinCallStack = [];
     }
-    this.expressionStack.push(true);
+    this.mixinCallStack.push(true);
 };
 
-contexts.Eval.prototype.outExpression = function () {
-    this.expressionStack.pop();
+contexts.Eval.prototype.outMixinCall = function () {
+    this.mixinCallStack.pop();
 };
 contexts.Eval.prototype.inCalc = false;
 contexts.Eval.prototype.mathOn = true;
 
-contexts.Eval.prototype.setName = function(name) {
-    this.name = name
+contexts.Eval.prototype.inDeclaration = function () {
+    if (!this.declaration) {
+        this.declarationStack = [];
+    }
+    this.declarationStack.push(true);
 };
-
+contexts.Eval.prototype.outDeclaration = function () {
+    this.declarationStack.pop();
+};
 contexts.Eval.prototype.isMathOn = function (op) {
     if (!this.mathOn) {
         return false;
     }
-    if (op === '/' 
+    if (op === '/'
         && this.math !== Constants.Math.ALWAYS 
         && (!this.parensStack || !this.parensStack.length)
-        && (!this.expressionStack || !this.expressionStack.length)
-        && !attributeIsOperation(this.name)
     ) {
+        if (this.declarationStack && this.declarationStack.length && (!this.mixinCallStack || !this.mixinCallStack.length)) {
+            return true;
+        }
         return false;
     }
-    if (this.math > Constants.Math.PARENS_DIVISION) {
+    if (this.math > Constants.Math.PARENS_DIVISION && (!this.mixinCallStack || !this.mixinCallStack.length)) {
         return this.parensStack && this.parensStack.length;
     }
     return true;
@@ -181,13 +188,4 @@ function isPathLocalRelative(path) {
     return path.charAt(0) === '.';
 }
 
-function attributeIsOperation(name) {
-    const operation = ['@media', 'font', 'bar', 'border-radius', 'border-radius-keep', 'border-radius-parts', 'color']
-    operation.forEach((attribute)=>{
-        if (name === attribute) {
-            return false
-        }
-    })
-    return true
-}
 // todo - do the same for the toCSS ?

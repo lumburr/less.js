@@ -1,6 +1,7 @@
 import Node from './node';
 import Color from './color';
 import Dimension from './dimension';
+import Variable from './variable'
 import * as Constants from '../constants';
 const MATH = Constants.Math;
 
@@ -32,12 +33,26 @@ Operation.prototype = Object.assign(new Node(), {
             if (!a.operate || !b.operate) {
                 if (
                     (a instanceof Operation || b instanceof Operation)
-                    && a.op === '/' && context.math === MATH.PARENS_DIVISION
+                    && a.op === '/' 
                 ) {
+                    if (context.mixinCallStack && context.mixinCallStack.length >= 1 
+                        && context.parensStack && context.parensStack.length >= 1 
+                        && context.math !== MATH.PARENS_DIVISION 
+                    ) {
+                        context.outMixinCall()
+                        a = a.eval(context)
+                    }
                     return new Operation(this.op, [a, b], this.isSpaced);
                 }
                 throw { type: 'Operation',
                     message: 'Operation on an invalid type' };
+            }
+            if (
+                (this.operands[0] instanceof Variable || this.operands[1] instanceof Variable) 
+                && context.mixinCallStack && context.mixinCallStack.length >= 1
+                && (!context.parensStack || !context.parensStack.length)
+            ) {
+                return new Operation(this.op, [a, b], this.isSpaced);
             }
 
             return a.operate(context, op, b);

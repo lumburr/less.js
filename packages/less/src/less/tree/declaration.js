@@ -64,9 +64,13 @@ Declaration.prototype = Object.assign(new Node(), {
         }
         try {
             context.importantScope.push({});
-            context.setName(this.name[0].value)
+            if (this instanceof Declaration && this.variable) {
+                context.inDeclaration()
+            }
             evaldValue = this.value.eval(context);
-
+            if (this instanceof Declaration && this.variable) {
+                context.outDeclaration()
+            }
             if (!this.variable && evaldValue.type === 'DetachedRuleset') {
                 throw { message: 'Rulesets cannot be evaluated on a property.',
                     index: this.getIndex(), filename: this.fileInfo().filename };
