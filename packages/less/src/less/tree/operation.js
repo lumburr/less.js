@@ -32,7 +32,9 @@ Operation.prototype = Object.assign(new Node(), {
             if (!a.operate || !b.operate) {
                 if (
                     (a instanceof Operation || b instanceof Operation)
-                    && a.op === '/' && context.math === MATH.PARENS_DIVISION
+                    && a.op === '/'
+                    && ( this.op !== '+' && this.op !== '-' )
+                    && context.math === MATH.PARENS_DIVISION
                 ) {
                     return new Operation(this.op, [a, b], this.isSpaced);
                 }

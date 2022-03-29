@@ -1,0 +1,17 @@
+ERROR: Operation on an invalid type
+
+[LessError: Operation on an invalid type] {
+  stack: undefined,
+  type: 'Operation',
+  filename: 'C:\\Users\\14022\\OneDrive\\桌面\\huaweiwork\\less.js\\packages\\test-data\\less\\math\\parens-division\\parens.less',
+  index: 755,
+  line: 28,
+  column: 2,
+  callLine: NaN,
+  callExtract: undefined,
+  extract: [
+    '  margin-all: ((4 * (5 + 5) / 2) + (-(@var * 2)));',
+    '  border-radius-keep: 4px * (1 + 1) / @var + 3px;',
+    '  border-radius-parts: ((4px * (1 + 1))) / ((@var + 3px));'
+  ]
+}
