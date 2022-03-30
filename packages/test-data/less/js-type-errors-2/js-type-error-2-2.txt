@@ -1,0 +1,4 @@
+SyntaxError: Operation on an invalid type in {path}js-type-error-2.less on line 9, column 5:
+8     @var: 9;
+9     .mixin(@var, (@var * 2) / 2);
+10 }
