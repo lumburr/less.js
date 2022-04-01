@@ -12,6 +12,6 @@ body {
     c: 30;
     d: 4;
 }`, {sourceMap: {}},  function(error, output) {
-  if (error)
-    console.error(error)
+    if (error)
+    {console.error(error)}
 })
