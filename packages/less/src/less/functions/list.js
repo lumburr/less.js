@@ -6,7 +6,7 @@ import Expression from '../tree/expression';
 import Ruleset from '../tree/ruleset';
 import Selector from '../tree/selector';
 import Element from '../tree/element';
-import Quote from '../tree/quoted';
+import Quoted from '../tree/quoted';
 import Value from '../tree/value';
 
 const getItemsFromNode = node => {
@@ -80,7 +80,7 @@ export default {
             return val;
         };
 
-        if (list.value && !(list instanceof Quote)) {
+        if (list.value && !(list instanceof Quoted)) {
             if (Array.isArray(list.value)) {
                 iterator = list.value.map(tryEval);
             } else {
