@@ -1170,7 +1170,6 @@ const Parser = function Parser(context, imports, fileInfo) {
             
                 ruleLookups: function() {
                     let rule;
-                    let args;
                     const lookups = [];
 
                     if (parserInput.currentChar() !== '[') { 
@@ -1179,7 +1178,6 @@ const Parser = function Parser(context, imports, fileInfo) {
 
                     while (true) {
                         parserInput.save();
-                        args = null;
                         rule = this.lookupValue();
                         if (!rule && rule !== '') {
                             parserInput.restore();

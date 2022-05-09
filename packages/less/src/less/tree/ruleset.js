@@ -44,7 +44,6 @@ Ruleset.prototype = Object.assign(new Node(), {
     },
 
     eval(context) {
-        const that = this;
         let selectors;
         let selCnt;
         let selector;

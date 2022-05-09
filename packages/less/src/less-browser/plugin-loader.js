@@ -1,4 +1,5 @@
 // TODO: Add tests for browser @plugin
+// eslint-disable-next-line no-unused-vars
 /* global window */
 
 import AbstractPluginLoader from '../less/environment/abstract-plugin-loader.js';

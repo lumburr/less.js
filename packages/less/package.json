@@ -42,7 +42,8 @@
 		"compile": "tsc -p tsconfig.json",
 		"copy:root": "shx cp -rf ./dist ../../",
 		"dev": "tsc -p tsconfig.json -w",
-		"prepublishOnly": "grunt dist"
+		"prepublishOnly": "grunt dist",
+		"lint": "grunt eslint"
 	},
 	"optionalDependencies": {
 		"errno": "^0.1.1",

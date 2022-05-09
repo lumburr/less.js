@@ -19,7 +19,11 @@
             }
         ],
         "no-undef": 0,
-        "no-unused-vars": 1,
+        "no-unused-vars": [
+            "error",
+            // do not check arguments.
+            { "args": "none" }
+          ],
         "no-caller": 2,
         "no-eq-null": 1,
         "guard-for-in": 2,

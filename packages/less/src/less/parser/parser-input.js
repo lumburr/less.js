@@ -220,7 +220,6 @@ export default () => {
         }
 
         do {
-            let prevChar;
             let nextChar = input.charAt(i);
             if (blockDepth === 0 && testChar(nextChar)) {
                 returnVal = input.substr(lastPos, i - lastPos);
@@ -302,7 +301,6 @@ export default () => {
                     loop = false;
                 }
             }
-            prevChar = nextChar;
         } while (loop);
 
         return returnVal ? returnVal : null;
