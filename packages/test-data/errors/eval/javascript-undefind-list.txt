@@ -1,0 +1,4 @@
+SyntaxError: JavaScript evaluation error: 'ReferenceError: sans is not defined' in C:\Users\14022\OneDrive\桌面\less.js\packages\test-data\errors\eval\javascript-undefind-list.less on line 2, column 18:
+1 .strings {
+2     font-family: `["Microsoft YaHei", "Arial Narrow", "黑体-简", "微软雅黑", "文泉驿微米黑", sans-serif]`;
+3 }

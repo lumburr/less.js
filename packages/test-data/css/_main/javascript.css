@@ -3,6 +3,11 @@
   js: 2;
   js: "hello world";
   js: 1, 2, 3;
+  string-embedded: "aaa" "bbb";
+  strings-list-embedded: "a", "b", "c";
+  list-embedded: "a", "b", 1;
+  font-family: "Microsoft YaHei", "Arial Narrow", "黑体-简", "微软雅黑", "文泉驿微米黑", "sans-serif";
+  strings-list-escaped: a, b, c;
   title: "string";
   ternary: true;
   multiline: 2;
