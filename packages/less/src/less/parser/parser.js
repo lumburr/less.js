@@ -1765,6 +1765,8 @@ const Parser = function Parser(context, imports, fileInfo) {
             mediaFeature: function () {
                 const entities = this.entities;
                 const nodes = [];
+                const leftParenthesesIndexs = [];
+                let leftParentheses = 0;
                 let e;
                 let p;
                 parserInput.save();
@@ -1772,22 +1774,46 @@ const Parser = function Parser(context, imports, fileInfo) {
                     e = entities.keyword() || entities.variable() || entities.mixinLookup();
                     if (e) {
                         nodes.push(e);
-                    } else if (parserInput.$char('(')) {
-                        p = this.property();
-                        e = this.value();
-                        if (parserInput.$char(')')) {
-                            if (p && e) {
-                                nodes.push(new(tree.Paren)(new(tree.Declaration)(p, e, null, null, parserInput.i, fileInfo, true)));
-                            } else if (e) {
-                                nodes.push(new(tree.Paren)(e));
-                            } else {
-                                error('badly formed media feature definition');
-                            }
+                    } else if (parserInput.$char('(') ) {
+                        leftParentheses++;
+                        leftParenthesesIndexs.push(nodes.length)
+                        e = this.inequality();
+                        if (e) {
+                            nodes.push(new(tree.Keyword)(e));
                         } else {
-                            error('Missing closing \')\'', 'Parse');
+                            p = this.property();
+                            e = this.value();
+                            if (parserInput.$char(')')) {
+                                leftParentheses--;
+                                if (p && e) {
+                                    nodes.push(new(tree.Paren)(new(tree.Declaration)(p, e, null, null, parserInput.i, fileInfo, true)));
+                                } else if (e) {
+                                    nodes.push(new(tree.Paren)(e));
+                                } else {
+                                    error('badly formed media feature definition');
+                                }
+                            } else if (e && parserInput.$char('(')) {
+                                nodes.push(e);
+                                leftParentheses++
+                                leftParenthesesIndexs.push(nodes.length)
+                            } else {
+                                error('Missing closing \')\'', 'Parse');
+                            }
                         }
-                    }
+                    } 
+                    while (parserInput.$char(')') && leftParenthesesIndexs.length > 0) {
+                        const parans = nodes.splice(leftParenthesesIndexs[leftParenthesesIndexs.length - 1]);
+                        leftParenthesesIndexs.splice(leftParenthesesIndexs.length - 1)
+                        leftParentheses--
+                        nodes.push(new(tree.Paren)(new(tree.Expression)(parans)))
+                    } 
                 } while (e);
+
+                if (leftParentheses > 0) {
+                    error('Missing closing \')\'', 'Parse');
+                } else if (leftParentheses < 0 ) {
+                    error('Missing closing \'(\'', 'Parse');
+                }
 
                 parserInput.forget();
                 if (nodes.length > 0) {
@@ -2416,6 +2442,16 @@ const Parser = function Parser(context, imports, fileInfo) {
                     return name;
                 }
                 parserInput.restore();
+            },
+            /** 
+            *  Inequality
+            *  @match 'width <= 30em' or '30em <= width <= 50em'
+            */ 
+            inequality: function () {
+                const name = parserInput.$re(/^([A-z]+-?[A-z]+|[A-z0-9]+)\s*([><]=\s*([A-z]+-?[A-z]+|[A-z0-9]+)\s*){1,2}/);
+                if (name) {
+                    return name[0];
+                }
             }
         }
     };

@@ -1,3 +1,3 @@
-SyntaxError: media definitions require block statements after any features in {path}parse-error-media-no-block-1.less on line 1, column 24:
+ParseError: Missing closing '(' in C:\Users\14022\OneDrive\桌面\less.js\packages\test-data\errors\parse\parse-error-media-no-block-1.less on line 1, column 26:
 1 @media (extra: bracket)) {
 2   body {
